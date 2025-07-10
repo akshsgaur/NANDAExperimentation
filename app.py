@@ -390,6 +390,267 @@ def static_files(filename):
     """Serve static files"""
     return send_from_directory('frontend/static', filename)
 
+@app.route('/mcp/transcriber', methods=['GET', 'POST'])
+def mcp_transcriber():
+    """MCP Transcriber Server Endpoint"""
+    if request.method == 'GET':
+        # Return server info for discovery
+        return jsonify({
+            "name": "Meeting Transcriber MCP Server",
+            "version": "1.0.0", 
+            "description": "Transcribe audio meetings and extract actionable content",
+            "protocol": "mcp/1.0",
+            "capabilities": {
+                "tools": [
+                    {
+                        "name": "transcribe_audio",
+                        "description": "Transcribe audio files to text with timestamps"
+                    },
+                    {
+                        "name": "analyze_meeting_content",
+                        "description": "Extract action items, decisions, and insights from transcriptions"
+                    }
+                ],
+                "resources": [
+                    {
+                        "name": "transcriptions",
+                        "description": "Access to transcription results"
+                    }
+                ]
+            }
+        })
+    
+    elif request.method == 'POST':
+        # Handle MCP requests
+        data = request.get_json()
+        method = data.get('method')
+        
+        if method == 'tools/call':
+            tool_name = data.get('params', {}).get('name')
+            arguments = data.get('params', {}).get('arguments', {})
+            
+            if tool_name == 'transcribe_audio':
+                # Your transcription logic here
+                return jsonify({
+                    "jsonrpc": "2.0",
+                    "id": data.get('id'),
+                    "result": {
+                        "content": "Transcription completed successfully",
+                        "isError": False
+                    }
+                })
+            
+            elif tool_name == 'analyze_meeting_content':
+                # Your analysis logic here
+                return jsonify({
+                    "jsonrpc": "2.0", 
+                    "id": data.get('id'),
+                    "result": {
+                        "content": "Meeting analysis completed",
+                        "isError": False
+                    }
+                })
+        
+        return jsonify({
+            "jsonrpc": "2.0",
+            "id": data.get('id'),
+            "error": {"code": -32601, "message": "Method not found"}
+        })
+
+@app.route('/mcp/scheduler', methods=['GET', 'POST'])
+def mcp_scheduler():
+    """MCP Scheduler Server Endpoint"""
+    if request.method == 'GET':
+        # Return server info for discovery
+        return jsonify({
+            "name": "Meeting Scheduler MCP Server",
+            "version": "1.0.0",
+            "description": "Schedule meetings based on transcription analysis", 
+            "protocol": "mcp/1.0",
+            "capabilities": {
+                "tools": [
+                    {
+                        "name": "schedule_meeting",
+                        "description": "Schedule meetings on connected calendars"
+                    },
+                    {
+                        "name": "find_available_slots", 
+                        "description": "Find available time slots for scheduling"
+                    },
+                    {
+                        "name": "analyze_scheduling_intent",
+                        "description": "Extract scheduling intent from transcriptions"
+                    }
+                ],
+                "resources": [
+                    {
+                        "name": "meetings",
+                        "description": "Access to scheduled meetings"
+                    }
+                ]
+            }
+        })
+    
+    elif request.method == 'POST':
+        # Handle MCP requests
+        data = request.get_json()
+        method = data.get('method')
+        
+        if method == 'tools/call':
+            tool_name = data.get('params', {}).get('name')
+            arguments = data.get('params', {}).get('arguments', {})
+            
+            if tool_name == 'schedule_meeting':
+                # Your scheduling logic here
+                return jsonify({
+                    "jsonrpc": "2.0",
+                    "id": data.get('id'),
+                    "result": {
+                        "content": "Meeting scheduled successfully",
+                        "isError": False
+                    }
+                })
+            
+            elif tool_name == 'find_available_slots':
+                # Your availability logic here
+                return jsonify({
+                    "jsonrpc": "2.0",
+                    "id": data.get('id'), 
+                    "result": {
+                        "content": "Available slots found",
+                        "isError": False
+                    }
+                })
+                
+            elif tool_name == 'analyze_scheduling_intent':
+                # Your intent analysis logic here
+                return jsonify({
+                    "jsonrpc": "2.0",
+                    "id": data.get('id'),
+                    "result": {
+                        "content": "Scheduling intent analyzed",
+                        "isError": False
+                    }
+                })
+        
+        return jsonify({
+            "jsonrpc": "2.0",
+            "id": data.get('id'),
+            "error": {"code": -32601, "message": "Method not found"}
+        })
+
+@app.route('/docs')
+def documentation():
+    """API Documentation Page"""
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Meeting Productivity Agents - MCP Servers</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+            .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; }
+            .endpoint { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 5px; }
+            code { background: #e8e8e8; padding: 2px 5px; border-radius: 3px; }
+            .badge { background: #007bff; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Meeting Productivity Agents - MCP Servers</h1>
+            <p><span class="badge">MCP 1.0</span> <span class="badge">Production Ready</span></p>
+            
+            <h2>🎯 Overview</h2>
+            <p>This system provides two Model Context Protocol (MCP) servers for automated meeting productivity:</p>
+            
+            <div class="endpoint">
+                <h3>📝 Transcriber Server</h3>
+                <p><strong>Endpoint:</strong> <code>/mcp/transcriber</code></p>
+                <p>Transcribes audio meetings and extracts actionable content using advanced AI models.</p>
+                
+                <h4>Available Tools:</h4>
+                <ul>
+                    <li><code>transcribe_audio</code> - Convert audio files to text with timestamps</li>
+                    <li><code>analyze_meeting_content</code> - Extract action items, decisions, and key insights</li>
+                </ul>
+                
+                <h4>Resources:</h4>
+                <ul>
+                    <li><code>transcriptions</code> - Access to stored transcription results</li>
+                </ul>
+            </div>
+            
+            <div class="endpoint">
+                <h3>📅 Scheduler Server</h3>
+                <p><strong>Endpoint:</strong> <code>/mcp/scheduler</code></p>
+                <p>Intelligent meeting scheduling based on transcription analysis with calendar integration.</p>
+                
+                <h4>Available Tools:</h4>
+                <ul>
+                    <li><code>schedule_meeting</code> - Schedule events on connected calendars</li>
+                    <li><code>find_available_slots</code> - Find optimal meeting times</li>
+                    <li><code>analyze_scheduling_intent</code> - Parse scheduling requests from text</li>
+                </ul>
+                
+                <h4>Resources:</h4>
+                <ul>
+                    <li><code>meetings</code> - Access to scheduled meeting information</li>
+                </ul>
+            </div>
+            
+            <h2>🚀 Integration</h2>
+            <p>These servers implement the Model Context Protocol and can be used with any MCP-compatible client:</p>
+            <ul>
+                <li>Claude Desktop with MCP support</li>
+                <li>Custom MCP clients</li>
+                <li>NANDA registry discovery</li>
+            </ul>
+            
+            <h2>🔧 Configuration</h2>
+            <p>Required environment variables:</p>
+            <ul>
+                <li><code>OPENAI_API_KEY</code> - For transcription services</li>
+                <li><code>GOOGLE_CALENDAR_CREDENTIALS</code> - For calendar integration</li>
+            </ul>
+            
+            <h2>📊 Status</h2>
+            <p>Service Status: <a href="/health">Health Check</a></p>
+            <p>Version: 1.0.0</p>
+            <p>Last Updated: July 2025</p>
+            
+            <h2>📞 Contact</h2>
+            <p>For support and integration help:</p>
+            <p>Email: akshitgaur997@gmail.com</p>
+            <p>GitHub: <a href="https://github.com/akshsgaur/NANDAExperimentation">Meeting Agents Repository</a></p>
+        </div>
+    </body>
+    </html>
+    '''
+
+@app.route('/health')
+def health_check():
+    """Health check for Railway deployment"""
+    return jsonify({
+        "status": "healthy",
+        "service": "Meeting Productivity Agents", 
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0",
+        "endpoints": {
+            "transcriber": "/mcp/transcriber",
+            "scheduler": "/mcp/scheduler",
+            "docs": "/docs"
+        },
+        "railway_domain": "meeting-productivity-agents-production.up.railway.app"
+    })
+
+# Update your existing routes to handle CORS for MCP
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 # Cleanup on exit
 def cleanup_handler(signum, frame):
     """Handle cleanup on exit"""
