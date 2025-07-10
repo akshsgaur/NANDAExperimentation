@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Agents System</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-robot"></i> Meeting Agents System</h1>
+            <p>AI-powered meeting transcription and scheduling</p>
+            <div class="system-status" id="systemStatus">
+                <span class="status-indicator" id="statusIndicator">●</span>
+                <span id="statusText">Checking system...</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- System Control Panel -->
+            <section class="control-panel">
+                <h2><i class="fas fa-cog"></i> System Control</h2>
+                <div class="control-buttons">
+                    <button id="startServers" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Servers
+                    </button>
+                    <button id="stopServers" class="btn btn-secondary">
+                        <i class="fas fa-stop"></i> Stop Servers
+                    </button>
+                    <button id="registerNanda" class="btn btn-accent">
+                        <i class="fas fa-globe"></i> Register with NANDA
+                    </button>
+                    <button id="discoverAgents" class="btn btn-info">
+                        <i class="fas fa-search"></i> Discover Agents
+                    </button>
+                </div>
+                <div class="server-status" id="serverStatus">
+                    <div class="server-item">
+                        <span class="server-name">Transcriber</span>
+                        <span class="server-indicator" id="transcriberStatus">●</span>
+                    </div>
+                    <div class="server-item">
+                        <span class="server-name">Scheduler</span>
+                        <span class="server-indicator" id="schedulerStatus">●</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audio Upload Section -->
+            <section class="upload-section">
+                <h2><i class="fas fa-microphone"></i> Audio Upload & Transcription</h2>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="audioFile" accept="audio/*" hidden>
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload audio file or drag & drop</p>
+                        <small>Supported formats: MP3, M4A, WAV, AIFF</small>
+                    </div>
+                </div>
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Uploading...</span>
+                </div>
+            </section>
+
+            <!-- Transcriptions Section -->
+            <section class="transcriptions-section">
+                <h2><i class="fas fa-file-text"></i> Transcriptions</h2>
+                <div class="transcriptions-list" id="transcriptionsList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No transcriptions yet. Upload an audio file to get started.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Meetings Section -->
+            <section class="meetings-section">
+                <h2><i class="fas fa-calendar-alt"></i> Detected Meetings</h2>
+                <div class="meetings-actions">
+                    <button id="scheduleAllMeetings" class="btn btn-success" style="display: none;">
+                        <i class="fas fa-calendar-plus"></i> Schedule All Meetings
+                    </button>
+                </div>
+                <div class="meetings-list" id="meetingsList">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No meetings detected yet. Analyze a transcription to find meetings.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NANDA Discovery Section -->
+            <section class="nanda-section">
+                <h2><i class="fas fa-network-wired"></i> NANDA Agent Discovery</h2>
+                <div class="nanda-controls">
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="transcription">Transcription</option>
+                        <option value="scheduling">Scheduling</option>
+                        <option value="analysis">Analysis</option>
+                    </select>
+                    <button id="refreshAgents" class="btn btn-info">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                </div>
+                <div class="agents-list" id="agentsList">
+                    <div class="empty-state">
+                        <i class="fas fa-robot"></i>
+                        <p>No agents discovered yet. Click "Discover Agents" to search the NANDA registry.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>
+                <i class="fas fa-code"></i> 
+                Meeting Agents System - Built with MCP, NANDA, and OpenAI
+            </p>
+        </footer>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

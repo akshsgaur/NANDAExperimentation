@@ -1,0 +1,28 @@
+# Environment
+venv/
+.env
+__pycache__/
+*.pyc
+
+# Credentials
+credentials.json
+token.pickle
+
+# Logs
+*.log
+logs/
+
+# Audio files
+*.m4a
+*.wav
+*.mp3
+*.aiff
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
