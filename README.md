@@ -27,7 +27,7 @@ A complete AI agent ecosystem that transcribes audio, detects meetings using LLM
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/akshsgaur/NANDAExperimentation
 cd meeting-agents
 
 # Make deployment script executable
