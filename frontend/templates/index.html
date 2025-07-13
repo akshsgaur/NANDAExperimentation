@@ -6,6 +6,281 @@
     <title>Meeting Agents System</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Enhanced NANDA Agent Cards Styles */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .agent-card {
+            background: #ffffff;
+            border: 1px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #4f46e5;
+        }
+
+        .agent-card.own-server {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+        }
+
+        .agent-card.verified {
+            border-color: #3b82f6;
+        }
+
+        .agent-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .agent-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .agent-logo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .agent-title {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 4px 0;
+            line-height: 1.2;
+        }
+
+        .agent-provider {
+            font-size: 12px;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .agent-status-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-verified {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-unstable {
+            background: #fed7d7;
+            color: #b91c1c;
+        }
+
+        .status-own {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .agent-description {
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 12px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .agent-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .type-badge {
+            background: #4f46e5;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .tag-badge {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            border: 1px solid #d1d5db;
+        }
+
+        .agent-metrics {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-top: 1px solid #f3f4f6;
+            font-size: 12px;
+        }
+
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #6b7280;
+        }
+
+        .uptime-good { color: #059669; }
+        .uptime-medium { color: #d97706; }
+        .uptime-poor { color: #dc2626; }
+
+        .agent-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-card {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary-card {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary-card:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary-card {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary-card:hover {
+            background: #e5e7eb;
+        }
+
+        .discovery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .discovery-stats {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        /* Enhanced empty state */
+        .empty-state-enhanced {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-enhanced i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -94,22 +369,45 @@
                 </div>
             </section>
 
-            <!-- NANDA Discovery Section -->
+            <!-- Enhanced NANDA Discovery Section -->
             <section class="nanda-section">
                 <h2><i class="fas fa-network-wired"></i> NANDA Agent Discovery</h2>
-                <div class="nanda-controls">
-                    <select id="categoryFilter">
+                
+                <!-- Search and Filters -->
+                <div class="search-filters" style="display: none;" id="searchFilters">
+                    <input type="text" id="searchInput" class="filter-input" placeholder="Search agents..." />
+                    <select id="typeFilter" class="filter-input">
+                        <option value="">All Types</option>
+                        <option value="agent">Agents</option>
+                        <option value="tool">Tools</option>
+                        <option value="resource">Resources</option>
+                    </select>
+                    <select id="categoryFilter" class="filter-input">
                         <option value="">All Categories</option>
                         <option value="transcription">Transcription</option>
                         <option value="scheduling">Scheduling</option>
+                        <option value="productivity">Productivity</option>
                         <option value="analysis">Analysis</option>
                     </select>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" id="verifiedOnly" />
+                        Verified Only
+                    </label>
                     <button id="refreshAgents" class="btn btn-info">
                         <i class="fas fa-refresh"></i> Refresh
                     </button>
                 </div>
+
+                <!-- Discovery Header with Stats -->
+                <div class="discovery-header" id="discoveryHeader" style="display: none;">
+                    <div class="discovery-stats" id="discoveryStats">
+                        Loading agents...
+                    </div>
+                </div>
+
+                <!-- Agents List -->
                 <div class="agents-list" id="agentsList">
-                    <div class="empty-state">
+                    <div class="empty-state-enhanced">
                         <i class="fas fa-robot"></i>
                         <p>No agents discovered yet. Click "Discover Agents" to search the NANDA registry.</p>
                     </div>
@@ -129,5 +427,215 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="/static/script.js"></script>
+    <script>
+        // Enhanced NANDA Discovery JavaScript
+        let currentAgents = [];
+
+        // Update the existing discoverAgents functionality
+        document.getElementById('discoverAgents').addEventListener('click', function() {
+            const button = this;
+            const originalContent = button.innerHTML;
+            
+            // Show loading state
+            button.innerHTML = '<span class="loading-spinner"></span> Discovering...';
+            button.disabled = true;
+            
+            fetch('/api/nanda/discover')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentAgents = data.agents;
+                        displayAgentCards(data.agents);
+                        showDiscoveryStats(data);
+                        document.getElementById('searchFilters').style.display = 'flex';
+                        showToast('success', `Discovered ${data.count} agents from NANDA registry`);
+                    } else {
+                        showToast('error', `Discovery failed: ${data.error}`);
+                        showEmptyState();
+                    }
+                })
+                .catch(error => {
+                    console.error('Discovery error:', error);
+                    showToast('error', 'Failed to connect to NANDA registry');
+                    showEmptyState();
+                })
+                .finally(() => {
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                });
+        });
+
+        function displayAgentCards(agents) {
+            const agentsList = document.getElementById('agentsList');
+            
+            if (agents.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            const cardsHTML = agents.map(agent => createAgentCard(agent)).join('');
+            agentsList.innerHTML = `<div class="agents-grid">${cardsHTML}</div>`;
+        }
+
+        function createAgentCard(agent) {
+            const logoHtml = agent.logo_url ? 
+                `<img src="${agent.logo_url}" alt="${agent.name}" />` :
+                agent.name.charAt(0).toUpperCase();
+
+            const statusClass = agent.verified ? 'status-verified' : 
+                               agent.is_own_server ? 'status-own' :
+                               agent.uptime >= 80 ? 'status-active' : 'status-unstable';
+            
+            const statusText = agent.verified ? 'Verified' :
+                              agent.is_own_server ? 'Your Server' :
+                              agent.uptime >= 80 ? 'Active' : 'Unstable';
+
+            const uptimeClass = agent.uptime >= 80 ? 'uptime-good' :
+                               agent.uptime >= 50 ? 'uptime-medium' : 'uptime-poor';
+
+            const typeBadges = agent.type_badges.map(type => 
+                `<span class="type-badge">${type}</span>`).join('');
+            
+            const tagBadges = agent.tag_badges.map(tag => 
+                `<span class="tag-badge">${tag}</span>`).join('');
+
+            const cardClass = `agent-card ${agent.verified ? 'verified' : ''} ${agent.is_own_server ? 'own-server' : ''}`;
+
+            return `
+                <div class="${cardClass}" data-agent-id="${agent.id}">
+                    <div class="agent-card-header">
+                        <div style="display: flex; align-items: flex-start;">
+                            <div class="agent-logo">${logoHtml}</div>
+                            <div class="agent-title">
+                                <h3 class="agent-name">${agent.name}</h3>
+                                <p class="agent-provider">${agent.provider}</p>
+                            </div>
+                        </div>
+                        <div class="agent-status-group">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+
+                    <div class="agent-description">
+                        ${agent.description}
+                    </div>
+
+                    <div class="agent-badges">
+                        ${typeBadges}
+                        ${tagBadges}
+                    </div>
+
+                    <div class="agent-metrics">
+                        <div class="metric-item">
+                            <i class="fas fa-heart-pulse"></i>
+                            <span class="${uptimeClass}">${agent.uptime_display}</span>
+                        </div>
+                        <div class="metric-item">
+                            <i class="fas fa-star"></i>
+                            <span>${agent.rating_display}</span>
+                        </div>
+                        <div class="metric-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>${agent.created_date}</span>
+                        </div>
+                    </div>
+
+                    <div class="agent-actions">
+                        <a href="${agent.url}" target="_blank" class="btn-card btn-primary-card">
+                            <i class="fas fa-external-link-alt"></i>
+                            Connect
+                        </a>
+                        ${agent.documentation_url ? 
+                            `<a href="${agent.documentation_url}" target="_blank" class="btn-card btn-secondary-card">
+                                <i class="fas fa-book"></i>
+                                Docs
+                            </a>` : ''
+                        }
+                        <button class="btn-card btn-secondary-card" onclick="viewAgentDetails('${agent.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showDiscoveryStats(data) {
+            const header = document.getElementById('discoveryHeader');
+            const stats = document.getElementById('discoveryStats');
+            
+            const verifiedCount = data.agents.filter(a => a.verified).length;
+            const ownCount = data.agents.filter(a => a.is_own_server).length;
+            
+            stats.innerHTML = `
+                Found ${data.count} agents • 
+                ${verifiedCount} verified • 
+                ${ownCount} your servers • 
+                Total registry: ${data.total_available || data.count}
+            `;
+            
+            header.style.display = 'flex';
+        }
+
+        function showEmptyState() {
+            const agentsList = document.getElementById('agentsList');
+            agentsList.innerHTML = `
+                <div class="empty-state-enhanced">
+                    <i class="fas fa-search"></i>
+                    <p>No agents found matching your criteria.</p>
+                </div>
+            `;
+        }
+
+        function viewAgentDetails(agentId) {
+            fetch(`/api/nanda/server/${agentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('info', `Viewing details for ${data.server.name}`);
+                        // You can implement a modal or navigate to details page here
+                        console.log('Agent details:', data.server);
+                    } else {
+                        showToast('error', 'Failed to load agent details');
+                    }
+                })
+                .catch(error => {
+                    showToast('error', 'Error loading agent details');
+                });
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchInput')?.addEventListener('input', filterAgents);
+        document.getElementById('typeFilter')?.addEventListener('change', filterAgents);
+        document.getElementById('categoryFilter')?.addEventListener('change', filterAgents);
+        document.getElementById('verifiedOnly')?.addEventListener('change', filterAgents);
+
+        function filterAgents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const verifiedOnly = document.getElementById('verifiedOnly').checked;
+
+            const filteredAgents = currentAgents.filter(agent => {
+                const matchesSearch = !searchTerm || 
+                    agent.name.toLowerCase().includes(searchTerm) ||
+                    agent.description.toLowerCase().includes(searchTerm) ||
+                    agent.provider.toLowerCase().includes(searchTerm);
+
+                const matchesType = !typeFilter || agent.types.includes(typeFilter);
+                const matchesCategory = !categoryFilter || agent.tags.includes(categoryFilter);
+                const matchesVerified = !verifiedOnly || agent.verified;
+
+                return matchesSearch && matchesType && matchesCategory && matchesVerified;
+            });
+
+            displayAgentCards(filteredAgents);
+        }
+
+        // Refresh functionality
+        document.getElementById('refreshAgents')?.addEventListener('click', function() {
+            document.getElementById('discoverAgents').click();
+        });
+    </script>
 </body>
 </html>
